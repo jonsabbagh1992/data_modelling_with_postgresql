@@ -37,6 +37,10 @@ Dimension Tables
 How to Run
 =====================
 
-You will need to set up you PostgreSQL environment locally and configure the create_database() function in create_table.py to your environment.
+1. Ensure you have Postgres installed on your local computer 
 
-Simply run the **run.sh** on a unix command line. It will reset the tables and load the JSON logs in the PostgreSQL database. Enjoy!
+2. Enter your Postgres credentials in the db.cfg file.
+
+3. Run the **run.sh** on a unix command line.  It will reset the tables and load the JSON logs in the PostgreSQL database. 
+
+Enjoy!
