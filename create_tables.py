@@ -1,27 +1,27 @@
 import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
 
+# Constants
+CONFIG_FILE = "db.cfg"
 
-def create_database():
+def create_database_connection(config_file=CONFIG_FILE):
     """
-    - Creates and connects to the sparkifydb
+    - Connects to the database
     - Returns the connection and cursor to sparkifydb
-    """
-    
-    # connect to default database
-    conn = psycopg2.connect("host=127.0.0.1 dbname=studentdb user=student password=student")
-    conn.set_session(autocommit=True)
-    cur = conn.cursor()
-    
-    # create sparkify database with UTF8 encoding
-    cur.execute("DROP DATABASE IF EXISTS sparkifydb")
-    cur.execute("CREATE DATABASE sparkifydb WITH ENCODING 'utf8' TEMPLATE template0")
+    """    
+    import configparser
 
-    # close connection to default database
-    conn.close()    
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FILE)
+    
+    # Credentials
+    HOST = config.get("POSTGRES", "HOST")
+    DB_NAME = config.get("POSTGRES", "DB_NAME")
+    USER = config.get("POSTGRES", "USER")
+    PASSWORD = config.get("POSTGRES", "PASSWORD")
     
     # connect to sparkify database
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
+    conn = psycopg2.connect(f"host={HOST} dbname={DB_NAME} user={USER} password={PASSWORD}")
     cur = conn.cursor()
     
     return cur, conn
@@ -58,7 +58,7 @@ def main():
     
     - Finally, closes the connection. 
     """
-    cur, conn = create_database()
+    cur, conn = create_database_connection()
     
     drop_tables(cur, conn)
     create_tables(cur, conn)
