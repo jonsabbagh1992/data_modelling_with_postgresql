@@ -1,31 +1,5 @@
-import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
-
-# Constants
-CONFIG_FILE = "db.cfg"
-
-def create_database_connection(config_file=CONFIG_FILE):
-    """
-    - Connects to the database
-    - Returns the connection and cursor to sparkifydb
-    """    
-    import configparser
-
-    config = configparser.ConfigParser()
-    config.read(CONFIG_FILE)
-    
-    # Credentials
-    HOST = config.get("POSTGRES", "HOST")
-    DB_NAME = config.get("POSTGRES", "DB_NAME")
-    USER = config.get("POSTGRES", "USER")
-    PASSWORD = config.get("POSTGRES", "PASSWORD")
-    
-    # connect to sparkify database
-    conn = psycopg2.connect(f"host={HOST} dbname={DB_NAME} user={USER} password={PASSWORD}")
-    cur = conn.cursor()
-    
-    return cur, conn
-
+from create_connection import create_database_connection
 
 def drop_tables(cur, conn):
     """
@@ -58,7 +32,8 @@ def main():
     
     - Finally, closes the connection. 
     """
-    cur, conn = create_database_connection()
+    conn = create_database_connection()
+    cur = conn.cursor()
     
     drop_tables(cur, conn)
     create_tables(cur, conn)
